@@ -10,21 +10,35 @@ fluidsynth.init('/Users/bernardo/.fluidsynth/default_sound_font.sf2')
 fluidsynth.play_Note(Note("C-5"))
 #time.sleep(1)
 
+# Harpsihord
+#fluidsynth.set_instrument(1, 7) 25  Electric Guitar (jazz)
+fluidsynth.set_instrument(1, 1)
+
 # If you're not using Linux, you'll need to change this
 # check the Arduino IDE to see what serial port it's attached to
 #ser = serial.Serial('/dev/ttyACM0', 115200)
 #MAC  check ls //dev/cu.*
-ser = serial.Serial('/dev/cu.usbmodem1421', 115200)
+ser = serial.Serial('/dev/cu.usbmodem1411', 115200)
 
 # set plot to animated
 
-notes = ['C', 'D', 'E']
+#notes = ['C', 'D', 'E']
 
 start_time = time()
-duration = 20 # total seconds to collect data
+duration = 60 # total seconds play
 end_time = start_time + duration
 
 run = True
+
+def velocity(v):
+    vel_midi = 150 - v
+    if (vel_midi > 127):
+        vel_midi = 127
+    elif (vel_midi < 0):
+        vel_midi = 0         
+    return vel_midi   
+           
+    
 
 # collect the data and plot a moving frame
 while run:
@@ -35,12 +49,13 @@ while run:
     try:
         #print data
         #print data[3]
-        note = data[3] + "-5"
+        #note = data[3] + "-5"
+        note =  Note(data[3] + "-5")
         note_time = int(data[5])
-        
+        note.velocity = velocity(note_time)
         if (note_time > 0):
-            print note_time
-            fluidsynth.play_Note(Note(note))
+            print note_time, velocity(note_time)
+            fluidsynth.play_Note(note)
         
     # if the try statement throws an error, just do nothing
     except: pass

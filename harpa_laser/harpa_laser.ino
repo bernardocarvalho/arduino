@@ -101,7 +101,8 @@ void setup() {
     Serial.print("Dist ");
     Serial.print(distance);
     Serial.print(" Note ");
-    Serial.write(get_note(distance));
+    char nt = get_note(distance);
+    Serial.write(nt);
     Serial.print(" Time ");
     Serial.println(time_note);
     
@@ -114,5 +115,7 @@ void setup() {
     lcd.print("DIST ");
     lcd.print(distance);
     lcd.print("   ");
+    lcd.setCursor(10,1);  
+    lcd.write(nt);
     //delay(400);
 }

@@ -6,7 +6,9 @@ import numpy as np
 from time import time 
 #import time
 
-fluidsynth.init('/Users/bernardo/.fluidsynth/default_sound_font.sf2')
+#fluidsynth.init('/Users/bernardo/.fluidsynth/default_sound_font.sf2')
+fluidsynth.init('/usr/share/sounds/sf2/FluidR3_GM.sf2')
+
 fluidsynth.play_Note(Note("C-5"))
 #time.sleep(1)
 
@@ -16,9 +18,9 @@ fluidsynth.set_instrument(1, 1)
 
 # If you're not using Linux, you'll need to change this
 # check the Arduino IDE to see what serial port it's attached to
-#ser = serial.Serial('/dev/ttyACM0', 115200)
+ser = serial.Serial('/dev/ttyACM0', 115200)
 #MAC  check ls //dev/cu.*
-ser = serial.Serial('/dev/cu.usbmodem1411', 115200)
+#ser = serial.Serial('/dev/cu.usbmodem1411', 115200)
 
 # set plot to animated
 

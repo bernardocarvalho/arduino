@@ -5,6 +5,10 @@
   *
   */
 #include <LiquidCrystal.h>
+#include <SoftwareSerial.h>
+
+SoftwareSerial midiSerial(11, 10); // RX, TX
+
 
 // select the pins used on the LCD panel
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
@@ -17,6 +21,7 @@ const int analogPin = 1;     // Photodiode Emiter
 
 int adcval = 0;           // variable to store the value read
 int distance;
+int lastMidiNote = 0;
 
 char get_note(int dist){
   char c = 'A';
@@ -81,7 +86,15 @@ int sound_distance(){
     // Calculating the distance
     int dist = duration*0.034/2;
     return dist;
-}    
+} 
+
+// plays a MIDI note. Doesn't check to see that cmd is greater than 127, or that
+// data values are less than 127:
+void noteOn(int cmd, int pitch, int velocity) {
+  midiSerial.write(cmd);
+  midiSerial.write(pitch);
+  midiSerial.write(velocity);
+}
 void setup() {
      lcd.begin(16, 2);              // start the library
      lcd.setCursor(0,0);
@@ -90,19 +103,37 @@ void setup() {
     pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
     pinMode(echoPin, INPUT); // Sets the echoPin as an Input
     Serial.begin(115200); // Starts the serial communication
+    // Set MIDI baud rate:
+    midiSerial.begin(31250);
   }
  void loop() {
+
     unsigned time_note = 0;
+    //Note on channel 1 (0x90), some note value (note), silent velocity (0x00):
+    noteOn(0x90, lastMidiNote, 0x00);
     if(wait_for_laser_off_or_timeout(256, 200)){
       time_note = wait_for_laser_time_or_timeout(700, 400);    
     }
     distance= sound_distance();
+    char nt = get_note(distance);
+    // play notes from F#-0 (0x1E) to F#-5 (0x5A):
+    // D2 38 0x26
+    //https://www.wavosaur.com/download/midi-note-hex.php
+    int midiNote = nt - 30 ; //0x1E + nt;
+    //Note on channel 1 (0x90), some note value (note), middle velocity (0x45):
+    if (time_note != 0){
+      noteOn(0x90, midiNote, 0x45);
+      lastMidiNote = midiNote;
+    }
+
     // Prints the distance on the Serial Monitor
     Serial.print("Dist ");
     Serial.print(distance);
     Serial.print(" Note ");
-    char nt = get_note(distance);
+
     Serial.write(nt);
+    Serial.print(" M ");
+    Serial.print(midiNote);
     Serial.print(" Time ");
     Serial.println(time_note);
     
@@ -117,5 +148,6 @@ void setup() {
     lcd.print("   ");
     lcd.setCursor(10,1);  
     lcd.write(nt);
+//    delay(100);
     //delay(400);
 }

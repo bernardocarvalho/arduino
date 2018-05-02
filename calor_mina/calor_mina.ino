@@ -14,11 +14,12 @@
 
 
 /********************************************************************/
-// Data wire is plugged into pin 2 on the Arduino 
+// Data wire is plugged into pin 10 on the Arduino 
 #define ONE_WIRE_BUS 10 
 
 // Temperature precision is 12 bits (max.)
 #define TEMPERATURE_PRECISION 12
+
 
 // Temperature is measured every  milliseconds
 #define TEMP_HEAT 120000 // 
@@ -72,7 +73,7 @@ void setup (void) {
     }
   }
   currentTime = millis();
-  changeTime = currentTime + TEMP_HEAT/2;   // Coool Half Cycle
+  changeTime = currentTime + TEMP_HEAT/2;  ws2812b  // Coool Half Cycle
 }
 
 void loop() {

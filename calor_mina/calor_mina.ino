@@ -14,14 +14,9 @@ uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 #define BRIGHTNESS  128
 
 /********************************************************************/
-// First we include the libraries
-//#include <OneWire.h> 
-//#include <DallasTemperature.h>
 // Rele is plugged into pin 7 on the Arduino
 #define RELE 7
 #define BOARD_LED 13  
-
-//int led = 13;
 
 /********************************************************************/
   
@@ -32,8 +27,8 @@ uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 #define TEMPERATURE_PRECISION 12
 
 // Temperature is measured every  milliseconds
-#define TEMP_HEAT 12800
-#define TEMP_COOL 12800
+#define TEMP_HEAT 128000
+#define TEMP_COOL 128000
 
 #define PRINT_PERIOD 500
 

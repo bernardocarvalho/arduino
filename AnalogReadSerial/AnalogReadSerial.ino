@@ -7,9 +7,12 @@
  
  Upload this to the Arduino using the Arduino IDE!
  */
+long randNumber;
 
+int data=0;
 // the setup routine runs once when you press reset:
 void setup() {
+  randomSeed(analogRead(0));
   // initialize serial communication at 9600 bits per second:
   Serial.begin(115200);
 }
@@ -18,7 +21,12 @@ void setup() {
 void loop() {
   // read the input on analog pin 0:
   int sensorValue = analogRead(A0);
+  randNumber = random(300); // print a random number from 0 to 299
   // print out the value you read:
+  Serial.print(data++, DEC);
+  Serial.print(", ");
+  Serial.print(randNumber, DEC);
+  Serial.print(", ");
   Serial.println(sensorValue);
   delay(50);        // delay in between reads for stability
 }

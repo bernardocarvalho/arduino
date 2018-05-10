@@ -4,7 +4,7 @@
 const byte ledPin = 13;
 const byte interruptPin = 2; //DIGITAL PIN 2 , INT0 
 volatile byte state = LOW;
-unsigned long timeUp, lastTimeUp, timeDown, lastTimeDown;
+unsigned long timeUp, lastTimeUp, timeDown, lastTimeDown, timeStart;
 long  period, veloc;
 int print_time     = 0, irq_cnt=0;
 /*******************************************************
@@ -58,6 +58,7 @@ void changePin() {
   digitalWrite(ledPin, pinVal);
   irq_cnt++;
   if (pinVal== LOW){  // Barrier closed
+    
     if (irq_cnt > 3){
       lastTimeDown = timeDown; 
       timeDown=micros();
@@ -77,20 +78,23 @@ void changePin() {
 
 void setup()
 {
+
   pinMode(ledPin, OUTPUT);
-  pinMode(interruptPin, INPUT_PULLUP);
+//  pinMode(interruptPin, INPUT_PULLUP);
+  pinMode(interruptPin, INPUT);
   attachInterrupt(0, changePin, CHANGE); // two external interrupts: numbers 0 (on digital pin 2) and 1 (on digital pin 3)
   Serial.begin(115200);
-  Serial.println(F("Hello Physics."));
+  Serial.println(F("Hello IST Physics Alumni!"));
   lcd.begin(16, 2);              // start the library
   lcd.setCursor(0,0);
   lcd.print(F("Pendulo Simples")); // print a simple message
+  timeStart=millis();
 }
  
 void loop()
 {
- lcd.setCursor(4,1);            // move cursor to second line "1" and 9 spaces over
- lcd.print(millis()/1000);      // display seconds elapsed since power-up
+ lcd.setCursor(4,1);            // move cursor to second line 
+ lcd.print((millis() -timeStart)/1000);      // display seconds elapsed since power-up
 
    //lcd.setCursor(9,1);            // move cursor to 
    //lcd.print("P      ");   lcd.setCursor(9,1);            // move cursor to 
@@ -103,7 +107,7 @@ void loop()
    Serial.print("TimeDown: ");
    Serial.print(timeDown, DEC);
    Serial.print("\t");
-   Serial.print("TimeUp: ");
+   Serial.print("TimeUp: ");+
    Serial.println(timeUp, DEC);
    Serial.print("LTimeDown: ");
    Serial.print(lastTimeDown, DEC);
@@ -111,12 +115,19 @@ void loop()
 //   Serial.println(lastTimeUp);
 //   Serial.print("LTimeUp: ");
    Serial.println(lastTimeUp, DEC);
-*/
    Serial.print("Time: ");
    Serial.print(millis(), DEC);
    Serial.print("\tPeriod: ");
    Serial.print(period, DEC);
    Serial.print("\tVeloc:  ");
+   Serial.println(veloc, DEC);
+
+   Ball 57 mm; 80 mm
+*/
+   Serial.print(millis()-timeStart, DEC);
+   Serial.print(", ");
+   Serial.print(period, DEC);
+   Serial.print(", ");
    Serial.println(veloc, DEC);
    lcd.setCursor(9,1);            // move cursor to 
    lcd.print("P      ");
@@ -157,9 +168,12 @@ void loop()
      }
    case btnSELECT:
      {
-      irq_cnt=0;  
-//     lcd.print(adc_key_in);
-     lcd.print(F("RESET"));
+        irq_cnt=0;  
+        timeStart=millis();
+//        lcd.setCursor(4,1);            // move cursor to second line 
+//        lcd.print(F("    ")); 
+//      lcd.print(adc_key_in);
+        lcd.print(F("RESET    "));
      break;
      }
      case btnNONE:

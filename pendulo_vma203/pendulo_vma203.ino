@@ -57,7 +57,8 @@ void changePin() {
   int pinVal = digitalRead(interruptPin);
   digitalWrite(ledPin, pinVal);
   irq_cnt++;
-  if (pinVal== LOW){  // Barrier closed
+//  if (pinVal== LOW){  // For Vernier  Gate and Diode connected to + 5V. Barrier closed
+  if (pinVal== HIGH){  // Barrier closed
     
     if (irq_cnt > 3){
       lastTimeDown = timeDown; 
@@ -80,8 +81,8 @@ void setup()
 {
 
   pinMode(ledPin, OUTPUT);
-//  pinMode(interruptPin, INPUT_PULLUP);
-  pinMode(interruptPin, INPUT);
+  pinMode(interruptPin, INPUT_PULLUP); // For Vernier  Gate and Diode connected to GND
+//  pinMode(interruptPin, INPUT);
   attachInterrupt(0, changePin, CHANGE); // two external interrupts: numbers 0 (on digital pin 2) and 1 (on digital pin 3)
   Serial.begin(115200);
   Serial.println(F("Hello IST Physics Alumni!"));
